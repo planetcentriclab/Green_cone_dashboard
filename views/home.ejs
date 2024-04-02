@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>First Page</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Green Cone Dashboard</h1>
+    <hr>
+    <ul>
+        <% all_sensor.forEach(function(sensor, index) { %>
+            <li>Sensor <%= index + 1 %>: <%=sensors_name[index] %> <br/> <span id="sensor-<%= index %>"><%= sensor.toFixed(3) %></span></li>
+            <!-- Loop for show sensor values, span id mean: we will create id of each index for update with socket.io -->
+        <% }); %>
+        <hr>
+        <h2>Plot real-time of sensor: Humid 1</h2>
+        <canvas id="myChart" width="5" height="2"></canvas>
+
+    </ul>
+    <button id="downloadBtn">Download CSV</button> 
+    <script>
+        const socket = io();
+        // call updateSensorValue func when 'initialData' get emitted
+        socket.on('initialData', function(sensors) {
+            updateSensorValues(sensors);
+        });
+
+        // call updateSensorValue func when 'sensorData' get emitted
+        socket.on('sensorData', function(sensors) {
+            updateSensorValues(sensors);
+        });
+
+        function updateSensorValues(sensors) {
+            sensors.forEach((sensor, index) => {
+                const sensorElement = document.getElementById(`sensor-${index}`); // finds the corresponding HTML element in the UI
+                if (sensorElement) { //Updates the text content of that element to display the sensor reading
+                    sensorElement.textContent = sensor.toFixed(3);  //toFixed mean round decimal to n position
+                }
+            });
+        }
+
+        // When user click at Download CSV Button with id 'downloadBtn', it will link to path '/download' 
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+          window.location.href = '/download';
+        });
+
+        // Create the chart
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Humid1 Dataset',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    }
+                }
+            }
+        });
+
+        // Receive updated data and update chart
+        socket.on('updatedGraph', (data) => {
+            updateChart(data.labels, data.data);
+        });
+
+        function updateChart(labels, data) {
+            myChart.data.labels = labels;
+            myChart.data.datasets[0].data = data;
+            myChart.update();
+        }
+
+    </script>
+</body>
+</html>
