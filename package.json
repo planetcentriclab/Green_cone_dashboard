@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon ./bin/www"
+    "start": "nodemon ./bin/www",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "repository": {
     "type": "git",
@@ -25,5 +27,8 @@
     "plotly": "^1.0.6",
     "querystring": "^0.2.1",
     "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
   }
 }
