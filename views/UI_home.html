@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fetch JSON Data from Multiple URLs</title>
+    <link rel="stylesheet" href="./style_home.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.en.min.js"></script>
+</head>
+<body>
+    <div class="last-element-container">
+        <h1>Green Cone Dashboard</h1>
+        <h3>Real-time Data Update Monitoring</h3>
+        <br>
+            <div class="date-range-container">
+                <div class="date-range-column">
+                    <div id="last-value-Methane"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-Moisture(1)"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-Moisture(2)"></div>
+                </div>
+            </div>
+
+            <div class="date-range-container">
+                <div class="date-range-column">
+                    <div id="last-value-PH"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-O2(1)"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-O2(2)"></div>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="date-range-container">
+                <div class="date-range-column">
+                    <div id="last-value-AmbientLight"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-CO2(1)"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-CO2(2)"></div>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="date-range-container">
+                <div class="date-range-column">
+                    <div id="last-value-TempNoContact(1)"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-TempNoContact(2)"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-TempContact"></div>
+                </div>
+            </div>
+
+        <hr>
+        <h5>Power Cabinet Data</h5>
+
+            <div class="date-range-container">
+                <div class="date-range-column">
+                    <div id="last-value-VoltageOut"></div>
+                </div>
+                <div class="date-range-column">
+                    <div id="last-value-CurrentOut"></div>
+                </div>
+            </div>
+    </div>
+<hr>
+
+<div class="UI-container">
+    <h1>Graph Plotting</h1>
+    <h2>Please select specific time range to plot graph</h2>
+    <div class="date-range-container">
+        <div class="date-range-column">
+            <p>Select Start Date Range:</p>
+            <div class="date-range-picker-1">
+                <input type="text" id="date-range1" class="form-control" placeholder="Select Date Range">
+                <span class="calendar-icon">&#128197;</span>
+            </div>
+        </div>
+        <div class="date-range-column">
+            <p>Select End Date Range:</p>
+            <div class="date-range-picker-2">
+                <input type="text" id="date-range2" class="form-control" placeholder="Select Date Range">
+                <span class="calendar-icon">&#128197;</span>
+            </div>
+        </div>
+    </div>
+    <button class="select-button-green" type="button" onclick="Selection_Target()">Display Select Target Date</button>
+    <button class="select-button-red" type="button" onclick="Selection_All()">Display All Data</button>
+</div>
+
+
+<div class="graph-container">
+    <div id = "show-text"></div>
+    <div class="graph-range-container">
+        <div class="graph-range-column">
+            <canvas id="Graph-Methane" ></canvas>
+            <hr>
+        </div>
+        <div class="graph-range-column">
+            <canvas id="Graph-TempContact"></canvas>
+            <hr>
+        </div>
+    </div>
+
+    <div class="graph-range-container">
+        <div class="graph-range-column">
+            <canvas id="Graph-Moisture(1)" ></canvas>
+            <hr>
+        </div>
+        <div class="graph-range-column">
+            <canvas id="Graph-Moisture(2)"></canvas>
+            <hr>
+        </div>
+    </div>
+
+    <div class="graph-range-container">
+        <div class="graph-range-column">
+            <canvas id="Graph-O2(1)" ></canvas>
+            <hr>
+        </div>
+        <div class="graph-range-column">
+            <canvas id="Graph-O2(2)"></canvas>
+            <hr>
+        </div>
+    </div>
+
+    <div class="graph-range-container">
+        <div class="graph-range-column">
+            <canvas id="Graph-CO2(1)" ></canvas>
+            <hr>
+        </div>
+        <div class="graph-range-column">
+            <canvas id="Graph-CO2(2)"></canvas>
+            <hr>
+        </div>
+    </div>
+
+    <div class="graph-range-container">
+        <div class="graph-range-column">
+            <canvas id="Graph-TempNoContact(1)" ></canvas>
+            <hr>
+        </div>
+        <div class="graph-range-column">
+            <canvas id="Graph-TempNoContact(2)"></canvas>
+            <hr>
+        </div>
+    </div>
+
+    <div class="graph-range-container">
+        <div class="graph-range-column">
+            <canvas id="Graph-AmbientLight" ></canvas>
+            <hr>
+        </div>
+        <div class="graph-range-column">
+            <canvas id="Graph-PH"></canvas>
+            <hr>
+        </div>
+    </div>
+</div>
+
+<div class="graph-container">
+    <h2>Data form Power Cabinet</h2>
+    <div class="graph-range-container">
+        <div class="graph-range-column">
+            <canvas id="Graph-VoltageOut" ></canvas>
+            <hr>
+        </div>
+        <div class="graph-range-column">
+            <canvas id="Graph-CurrentOut"></canvas>
+            <hr>
+        </div>
+    </div>
+</div>
+
+<script>
+    let DateStart;
+    let DateEnd;
+    let DateStart_ALL;
+    let DateEnd_ALL;
+    let select_range = 0;
+    let confirm_date_range = ['',''];
+    
+    function initializeDatepicker() {
+        $('#date-range1').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            container: '.date-range-picker-1',
+            startDate: DateStart_ALL, 
+            endDate: String(DateEnd_ALL),
+            range: true
+
+        }).on('changeDate', function(e) {
+            selectedDatesStart = e.dates;
+            var selectedDatesStart = e.date; // Access the selected date from the event object
+            var year = selectedDatesStart.getFullYear(); // Get the year
+            var month = selectedDatesStart.getMonth() + 1; // Get the month (Note: Months are zero-based)
+            var day = selectedDatesStart.getDate(); // Get the day
+
+            DateStart = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+        });
+        
+        $('#date-range2').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'yyyy-mm-dd',
+            container: '.date-range-picker-2',
+            startDate: DateStart_ALL, 
+            endDate: String(DateEnd_ALL),
+            range: true
+
+        }).on('changeDate', function(e) {
+            selectedDatesEnd = e.dates;
+            var selectedDatesEnd = e.date; // Access the selected date from the event object
+            var year = selectedDatesEnd.getFullYear(); // Get the year
+            var month = selectedDatesEnd.getMonth() + 1; // Get the month (Note: Months are zero-based)
+            var day = selectedDatesEnd.getDate(); // Get the day
+            DateEnd = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+        });
+    };
+
+    function Selection_Target(){
+        var showTextDiv = document.getElementById("show-text");
+        if (typeof DateStart == undefined || typeof DateEnd == undefined){
+            showTextDiv.innerHTML = `<h3>Please select target date</h3>`
+        }
+        else{
+            showTextDiv.innerHTML = `<h3>Display selected data from ${DateStart} to ${DateEnd}</h3>`
+        }
+        select_range = 1
+        confirm_date_range[0] = DateStart
+        confirm_date_range[1] = DateEnd
+
+        // console.log(DateStart, DateEnd)
+    }
+
+    function Selection_All(){
+        select_range = 0
+        var showTextDiv = document.getElementById("show-text");
+        showTextDiv.innerHTML = `<h3>Display all data from ${DateStart_ALL} to ${DateEnd_ALL}</h3>`
+    }
+
+    // Array of URLs from which to fetch JSON data
+    const urls = [
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/methane',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/moisture_0',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/moisture_1',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/ph',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/o2_0',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/o2_1',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/ambientLight',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/co2_0',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/co2_1',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/temp_noContact_0',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/temp_noContact_1',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/temp_contact',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/voltageFlow_out',
+        'https://books-opening.gl.at.ply.gg:61345/api/v1/greenCone/currentFlow_out'
+    ];
+
+    let sensor_names = ['Methane', 'Moisture(1)', 'Moisture(2)', 'PH', 'O2(1)', 'O2(2)' , 'AmbientLight', 'CO2(1)', 'CO2(2)', 'TempNoContact(1)', 'TempNoContact(2)', 'TempContact', 'VoltageOut', 'CurrentOut']
+    let sensor_unit = ['ppm', '%', '%', 'pH', '%', '%', 'Lux', 'ppm', 'ppm', 'Celsius', 'Celsius', 'Celsius', 'volt', 'Amp']
+
+    //---- Array order by sensor_names
+    let sensor_min = [100, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0]
+    let sensor_max = [10000, 100, 100, 9, 25, 25, 1000, 5000, 5000, 100, 100, 100]
+    //-----------------
+    
+    let ToChart_data = [];
+
+    const lastElementUpdatedEvent = new Event('lastElementUpdated');
+
+    // Function to fetch JSON data from a URL
+    const fetchData = async (url) => {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch ${url}: ${response.status} ${response.statusText}`);
+            }
+            return await response.json();   
+        } catch (error) {
+            console.error(`Error fetching ${url}:`, error);
+            return null;
+        }
+    };
+
+    function timeConvert(date_input){
+        var date = new Date(date_input);
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        var year = date.getUTCFullYear();
+        var month = ('0' + (date.getUTCMonth() + 1)).slice(-2); // Adding 1 because months are zero-based
+        var day = ('0' + date.getUTCDate()).slice(-2);
+        var formattedDate = year + '-' + month + '-' + day;
+        return formattedDate
+    }
+
+    var indices;
+    // Function to fetch JSON data from each URL and display it
+    const fetchAndDisplayData = async () => {
+        var lastElement1 = 0
+        var lastElement2 = 0
+        for (let i = 0; i < urls.length; i++) {
+            const LastDataElement = document.getElementById(`last-value-${sensor_names[i]}`);
+            const url = urls[i];
+            const data = await fetchData(url);
+            if (data) {
+                const jsonData = JSON.parse(JSON.stringify(data, null, 2));
+
+                indices = jsonData.map((element, index) => confirm_date_range.includes(timeConvert(element.date)) ? index : -1)
+                    .filter(index => index !== -1);
+
+                jsonData.forEach(function(element, index) {
+                    lastElement1 = element.data0
+                    lastElement2 = element.data1
+                    if (index === 0){
+                        DateStart_ALL = timeConvert(element.date);   
+                        initializeDatepicker();
+                    }
+
+                    if (index === jsonData.length - 1){
+                        DateEnd_ALL = timeConvert(element.date); 
+                        initializeDatepicker();     
+                    }
+
+                    if (i < 3){
+                        ToChart_data.push(lastElement2)
+                    }
+                    else{
+                        ToChart_data.push(lastElement1)
+                    }
+                });
+
+                if (select_range === 0){
+                    confirm_date_range[0] = ''
+                    confirm_date_range[1] = ''
+                    Selection_All()
+                }
+
+                if (i < 3){
+                    LastDataElement.innerHTML = `<h5>${i+1}. ${sensor_names[i]} Sensor</h5><pre>ADC Raw: ${lastElement1}</pre>Calculated Value: <pre>: ${lastElement2} ${sensor_unit[i]}</pre>`
+                }else{
+                    LastDataElement.innerHTML = `<h5>${i+1}. ${sensor_names[i]} Sensor</h5>Sensor Value: ${lastElement1} ${sensor_unit[i]}</pre>`}
+            }   
+
+            if (select_range === 0){
+                updateChart(ToChart_data, sensor_names[i], i)
+                ToChart_data = []
+            }
+            else {
+                // console.log(indices[0], indices[indices.length - 1])
+                updateChart(ToChart_data.slice(indices[0], indices[indices.length - 1]), sensor_names[i], i)
+                ToChart_data = []
+            }
+        }
+        console.log("In Loop",DateStart, DateEnd, indices)
+        window.dispatchEvent(lastElementUpdatedEvent);
+    };
+
+    const chart_structure = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        // min: 0, // Set the minimum value for y-axis
+                        // max: 50, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                }
+            }
+        }
+
+    const Chart1 = new Chart(document.getElementById('Graph-Methane').getContext('2d'), chart_structure);
+    const Chart2 = new Chart(document.getElementById('Graph-Moisture(1)').getContext('2d'), chart_structure);
+    const Chart3 = new Chart(document.getElementById('Graph-Moisture(2)').getContext('2d'), chart_structure);
+    const Chart4 = new Chart(document.getElementById('Graph-PH').getContext('2d'), chart_structure);
+    const Chart5 = new Chart(document.getElementById('Graph-O2(1)').getContext('2d'), chart_structure);
+    const Chart6 = new Chart(document.getElementById('Graph-O2(2)').getContext('2d'), chart_structure);
+    const Chart7 = new Chart(document.getElementById('Graph-AmbientLight').getContext('2d'), chart_structure);
+    const Chart8 = new Chart(document.getElementById('Graph-CO2(1)').getContext('2d'), chart_structure);
+    const Chart9 = new Chart(document.getElementById('Graph-CO2(2)').getContext('2d'), chart_structure);
+    const Chart10 = new Chart(document.getElementById('Graph-TempNoContact(1)').getContext('2d'), chart_structure);
+    const Chart11 = new Chart(document.getElementById('Graph-TempNoContact(2)').getContext('2d'), chart_structure);
+    const Chart12 = new Chart(document.getElementById('Graph-TempContact').getContext('2d'), chart_structure);
+    const Chart13 = new Chart(document.getElementById('Graph-VoltageOut').getContext('2d'), chart_structure);
+    const Chart14 = new Chart(document.getElementById('Graph-CurrentOut').getContext('2d'), chart_structure);
+
+    let All_Chart = [Chart1, Chart2, Chart3, Chart4, Chart5, Chart6, Chart7, Chart8, Chart9, Chart10, Chart11, Chart12, Chart13, Chart14]
+
+    function updateChart(data, sensor_name, index) {
+        All_Chart[index].data.labels = data;
+        All_Chart[index].data.datasets[0].data = data;
+        All_Chart[index].data.datasets[0].label = sensor_name;
+        // All_Chart[index].options.scales.y.min = sensor_min[index];
+        // All_Chart[index].options.scales.y.max = sensor_max[index];
+        All_Chart[index].options.scales.y.title.text = sensor_unit[index];
+        All_Chart[index].update();
+    }
+
+    // Call the function to fetch and display data
+    fetchAndDisplayData();
+    window.addEventListener('lastElementUpdated', fetchAndDisplayData);
+
+</script>
+
+</body>
+</html>

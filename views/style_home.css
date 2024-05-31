@@ -1,0 +1,125 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Data monitoring */
+
+.last-element-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 5px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+.date-range-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.date-range-column {
+    flex: 0 0 30%; /* Adjust width as needed */
+}
+
+/* Graph Show */
+.graph-container {
+    max-width: 1300px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 5px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.graph-range-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.graph-range-column {
+    flex: 0 0 48%; /* Adjust width as needed */
+}
+
+/* Select Date UI */
+.UI-container{
+    max-width: 800px;
+    margin: 10px auto;
+    padding: 10px;
+    text-align: center;
+}
+
+.date-range-picker-1 {
+    display: inline-block;
+    position: relative;
+}
+
+.date-range-picker-1 input[type="text"] {
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.date-range-picker-1 .calendar-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.date-range-picker-2 {
+    display: inline-block;
+    position: relative;
+}
+
+.date-range-picker-2 input[type="text"] {
+    width: 200px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+}
+
+.date-range-picker-2 .calendar-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+
+/* etc */
+.select-button-red {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.select-button-red:hover {
+    background-color: #e05555;
+}
+
+.select-button-green {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #0dee14;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.select-button-green:hover {
+    background-color: #b0e68e;
+}
