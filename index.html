@@ -13,8 +13,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.en.min.js"></script>
 </head>
 <body>
+    <img src="kmutt.png" class="top-right-kmutt">
+    <img src="FIBO.svg.png" class="top-right-fibo">
+    <img src="maskot-mixue.jpg" class="top-left-LabLogo">
+    <div class="top-left-LabName">
+        <h2>PlanetCentricLab</h2>
+        <p>@FIBO,KMUTT</p>
+    </div> 
+
     <div class="last-element-container">
-        <h1>Green Cone Dashboard</h1>
+        <h1>GREEN CONE DASHBOARD</h1>
         <h3>Real-time Data Update Monitoring</h3>
         <br>
             <div class="date-range-container">
@@ -195,7 +203,7 @@
     let DateEnd;
     let DateStart_ALL;
     let DateEnd_ALL;
-    let select_range = -1;
+    let select_range = 0;
     let confirm_date_range = ['',''];
     
     function initializeDatepicker() {
@@ -238,18 +246,16 @@
 
     function Selection_Target(){
         var showTextDiv = document.getElementById("show-text");
-        console.log(Number(DateStart.slice(5,7)), Number(DateEnd.slice(5,7)))
-        console.log(Number(DateStart.slice(8,10)), Number(DateEnd.slice(8,10)))
         if (DateStart === undefined || DateEnd === undefined){
             select_range = -1
             showTextDiv.innerHTML = `<h3 style="color: red;">Please Select Target Date !!!</h3>`
         }
         else{
-            if (Number(DateStart.slice(8,10)) > Number(DateEnd.slice(8,10))){
+            if (Number(DateStart.slice(5,7)) > Number(DateEnd.slice(5,7))){
                 select_range = -1
                 showTextDiv.innerHTML = `<h3 style="color: red;">Please Select End Date After Start Date!!!</h3>`
             }
-            else if (Number(DateStart.slice(5,7)) > Number(DateEnd.slice(5,7))){
+            else if (Number(DateStart.slice(8,10)) > Number(DateEnd.slice(8,10)) && Number(DateStart.slice(5,7)) == Number(DateEnd.slice(5,7))){
                 select_range = -1
                 showTextDiv.innerHTML = `<h3 style="color: red;">Please Select End Date After Start Date!!!</h3>`
             }
