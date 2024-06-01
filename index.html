@@ -238,16 +238,18 @@
 
     function Selection_Target(){
         var showTextDiv = document.getElementById("show-text");
+        console.log(Number(DateStart.slice(5,7)), Number(DateEnd.slice(5,7)))
+        console.log(Number(DateStart.slice(8,10)), Number(DateEnd.slice(8,10)))
         if (DateStart === undefined || DateEnd === undefined){
             select_range = -1
             showTextDiv.innerHTML = `<h3 style="color: red;">Please Select Target Date !!!</h3>`
         }
         else{
-            if (Number(DateStart.slice(8,10)) > Number(DateStart.slice(8,10))){
+            if (Number(DateStart.slice(8,10)) > Number(DateEnd.slice(8,10))){
                 select_range = -1
                 showTextDiv.innerHTML = `<h3 style="color: red;">Please Select End Date After Start Date!!!</h3>`
             }
-            else if (Number(DateStart.slice(8,10)) > Number(DateStart.slice(8,10))){
+            else if (Number(DateStart.slice(5,7)) > Number(DateEnd.slice(5,7))){
                 select_range = -1
                 showTextDiv.innerHTML = `<h3 style="color: red;">Please Select End Date After Start Date!!!</h3>`
             }
@@ -258,8 +260,6 @@
                 confirm_date_range[1] = DateEnd
             }
         }
-
-
     }
 
     function Selection_All(){
