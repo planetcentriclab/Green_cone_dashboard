@@ -15,14 +15,14 @@
 <body>
     <img src="kmutt.png" class="top-right-kmutt">
     <img src="FIBO.svg.png" class="top-right-fibo">
-    <img src="maskot-mixue.jpg" class="top-left-LabLogo">
+    <img src="planet-centric logo.png" class="top-left-LabLogo">
     <div class="top-left-LabName">
         <h3>PlanetCentricLab</h3>
         <p>@FIBO,KMUTT</p>
     </div> 
 
     <div class="last-element-container">
-        <h1>GREEN CONE DASHBOARD</h1>
+        <h1>GREENCONE DASHBOARD</h1>
         <h3>Real-time Data Update Monitoring</h3>
         <br>
             <div class="date-range-container">
@@ -381,8 +381,8 @@
                 ToChart_data = []
             }
             else if (select_range === 1){
-                // console.log(indices[0], indices[indices.length - 1])
-                updateChart(ToChart_data.slice(indices[0], indices[indices.length]), sensor_names[i], i)
+                console.log("plot selected data")
+                updateChart(ToChart_data.slice(indices[0], indices[indices.length - 1]), sensor_names[i], i)
                 ToChart_data = []
             }
         }
