@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fetch JSON Data from Multiple URLs</title>
+    <title>GreenCone Dashboard</title>
     <link rel="stylesheet" href="./style_home.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
@@ -294,13 +294,9 @@
 
     let sensor_names = ['Methane', 'Moisture(1)', 'Moisture(2)', 'PH', 'O2(1)', 'O2(2)' , 'AmbientLight', 'CO2(1)', 'CO2(2)', 'TempNoContact(1)', 'TempNoContact(2)', 'TempContact', 'VoltageOut', 'CurrentOut']
     let sensor_unit = ['ppm', '%', '%', 'pH', '%', '%', 'Lux', 'ppm', 'ppm', 'Celsius', 'Celsius', 'Celsius', 'volt', 'Amp']
-
-    //---- Array order by sensor_names
-    let sensor_min = [100, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0]
-    let sensor_max = [10000, 100, 100, 9, 25, 25, 1000, 5000, 5000, 100, 100, 100]
-    //-----------------
     
     let ToChart_data = [];
+    let all_time = [];
 
     const lastElementUpdatedEvent = new Event('lastElementUpdated');
 
@@ -333,6 +329,8 @@
     const fetchAndDisplayData = async () => {
         var lastElement1 = 0
         var lastElement2 = 0
+        var times = 0
+        var current_time = 0
         for (let i = 0; i < urls.length; i++) {
             const LastDataElement = document.getElementById(`last-value-${sensor_names[i]}`);
             const url = urls[i];
@@ -346,6 +344,7 @@
                 jsonData.forEach(function(element, index) {
                     lastElement1 = element.data0
                     lastElement2 = element.data1
+                    times = element.time
                     if (index === 0){
                         DateStart_ALL = timeConvert(element.date);   
                         initializeDatepicker();
@@ -353,14 +352,17 @@
 
                     if (index === jsonData.length - 1){
                         DateEnd_ALL = timeConvert(element.date); 
+                        current_time = element.time
                         initializeDatepicker();     
                     }
 
                     if (i < 3){
                         ToChart_data.push(lastElement2)
+                        all_time.push(times)
                     }
                     else{
                         ToChart_data.push(lastElement1)
+                        all_time.push(times)
                     }
                 });
 
@@ -377,20 +379,24 @@
             }   
 
             if (select_range === 0){
-                updateChart(ToChart_data, sensor_names[i], i)
+                updateChart(ToChart_data, sensor_names[i], i, current_time, DateEnd_ALL, all_time)
                 ToChart_data = []
+                all_time = []
             }
             else if (select_range === 1){
                 console.log("plot selected data")
-                updateChart(ToChart_data.slice(indices[0], indices[indices.length - 1]), sensor_names[i], i)
+                updateChart(ToChart_data.slice(indices[0], indices[indices.length - 1]), sensor_names[i], i ,current_time, DateEnd_ALL, all_time.slice(indices[0], indices[indices.length - 1]))
                 ToChart_data = []
+                all_time = []
             }
         }
         console.log("In Loop",DateStart, DateEnd, indices)
         window.dispatchEvent(lastElementUpdatedEvent);
     };
 
-    const chart_structure = {
+    //GRAPH DISPLAY Parameters
+
+    const chart_structure_methene = {
             type: 'line',
             data: {
                 labels: [],
@@ -410,41 +416,343 @@
                         }
                     },
                     y: {
-                        // min: 0, // Set the minimum value for y-axis
-                        // max: 50, // Set the maximum value for y-axis
+                        min: 0, // Set the minimum value for y-axis
+                        max: 100000, // Set the maximum value for y-axis
                         title: {
                             display: true, // Display the y-axis title
                             text: 'Y-Axis Legend' // The text for the y-axis title
                         }
                     } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
                 }
             }
         }
 
-    const Chart1 = new Chart(document.getElementById('Graph-Methane').getContext('2d'), chart_structure);
-    const Chart2 = new Chart(document.getElementById('Graph-Moisture(1)').getContext('2d'), chart_structure);
-    const Chart3 = new Chart(document.getElementById('Graph-Moisture(2)').getContext('2d'), chart_structure);
-    const Chart4 = new Chart(document.getElementById('Graph-PH').getContext('2d'), chart_structure);
-    const Chart5 = new Chart(document.getElementById('Graph-O2(1)').getContext('2d'), chart_structure);
-    const Chart6 = new Chart(document.getElementById('Graph-O2(2)').getContext('2d'), chart_structure);
-    const Chart7 = new Chart(document.getElementById('Graph-AmbientLight').getContext('2d'), chart_structure);
-    const Chart8 = new Chart(document.getElementById('Graph-CO2(1)').getContext('2d'), chart_structure);
-    const Chart9 = new Chart(document.getElementById('Graph-CO2(2)').getContext('2d'), chart_structure);
-    const Chart10 = new Chart(document.getElementById('Graph-TempNoContact(1)').getContext('2d'), chart_structure);
-    const Chart11 = new Chart(document.getElementById('Graph-TempNoContact(2)').getContext('2d'), chart_structure);
-    const Chart12 = new Chart(document.getElementById('Graph-TempContact').getContext('2d'), chart_structure);
-    const Chart13 = new Chart(document.getElementById('Graph-VoltageOut').getContext('2d'), chart_structure);
-    const Chart14 = new Chart(document.getElementById('Graph-CurrentOut').getContext('2d'), chart_structure);
+        const chart_structure_temp = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 10, // Set the minimum value for y-axis
+                        max: 150, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+        const chart_structure_co2 = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 400, // Set the minimum value for y-axis
+                        max: 5000, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+        const chart_structure_o2 = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 0, // Set the minimum value for y-axis
+                        max: 25, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+        const chart_structure_amb = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 0, // Set the minimum value for y-axis
+                        max: 100000, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+        const chart_structure_ph = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 3, // Set the minimum value for y-axis
+                        max: 9, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+        const chart_structure_mois = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 0, // Set the minimum value for y-axis
+                        max: 100, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+        const chart_structure_vout = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 10, // Set the minimum value for y-axis
+                        max: 15, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+        const chart_structure_cout = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Test',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 0.25,
+                    data: [],
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // Disable x-axis labels
+                        }
+                    },
+                    y: {
+                        min: 0, // Set the minimum value for y-axis
+                        max: 1, // Set the maximum value for y-axis
+                        title: {
+                            display: true, // Display the y-axis title
+                            text: 'Y-Axis Legend' // The text for the y-axis title
+                        }
+                    } 
+                },
+
+                plugins: {
+                    subtitle: {
+                        display: true,
+                        text: 'This is a description of the graph.' // The subtitle/description of the graph
+                    }
+                }
+            }
+        }
+
+    const Chart1 = new Chart(document.getElementById('Graph-Methane').getContext('2d'), chart_structure_methene);
+    const Chart2 = new Chart(document.getElementById('Graph-Moisture(1)').getContext('2d'), chart_structure_mois);
+    const Chart3 = new Chart(document.getElementById('Graph-Moisture(2)').getContext('2d'), chart_structure_mois);
+    const Chart4 = new Chart(document.getElementById('Graph-PH').getContext('2d'), chart_structure_ph);
+    const Chart5 = new Chart(document.getElementById('Graph-O2(1)').getContext('2d'), chart_structure_o2);
+    const Chart6 = new Chart(document.getElementById('Graph-O2(2)').getContext('2d'), chart_structure_o2);
+    const Chart7 = new Chart(document.getElementById('Graph-AmbientLight').getContext('2d'), chart_structure_amb);
+    const Chart8 = new Chart(document.getElementById('Graph-CO2(1)').getContext('2d'), chart_structure_co2);
+    const Chart9 = new Chart(document.getElementById('Graph-CO2(2)').getContext('2d'), chart_structure_co2);
+    const Chart10 = new Chart(document.getElementById('Graph-TempNoContact(1)').getContext('2d'), chart_structure_temp);
+    const Chart11 = new Chart(document.getElementById('Graph-TempNoContact(2)').getContext('2d'), chart_structure_temp);
+    const Chart12 = new Chart(document.getElementById('Graph-TempContact').getContext('2d'), chart_structure_temp);
+    const Chart13 = new Chart(document.getElementById('Graph-VoltageOut').getContext('2d'), chart_structure_vout);
+    const Chart14 = new Chart(document.getElementById('Graph-CurrentOut').getContext('2d'), chart_structure_cout);
 
     let All_Chart = [Chart1, Chart2, Chart3, Chart4, Chart5, Chart6, Chart7, Chart8, Chart9, Chart10, Chart11, Chart12, Chart13, Chart14]
 
-    function updateChart(data, sensor_name, index) {
-        All_Chart[index].data.labels = data;
+    function updateChart(data, sensor_name, index, current_time, current_date, times_display) {
+        All_Chart[index].data.labels = times_display;
         All_Chart[index].data.datasets[0].data = data;
         All_Chart[index].data.datasets[0].label = sensor_name;
-        // All_Chart[index].options.scales.y.min = sensor_min[index];
-        // All_Chart[index].options.scales.y.max = sensor_max[index];
         All_Chart[index].options.scales.y.title.text = sensor_unit[index];
+        All_Chart[index].options.plugins.subtitle.text = `Latest Update: ${current_date}, ${current_time}`;
         All_Chart[index].update();
     }
 
