@@ -280,12 +280,16 @@
                 confirm_date_range[1] = DateEnd
             }
         }
+        var showTextDate = document.getElementById("show-text-date");
+        showTextDate.innerHTML = `<h5>Get CSV file from ${DateStart} to ${DateEnd}</h5>`
     }
 
     function Selection_All(){
         select_range = 0
         var showTextDiv = document.getElementById("show-text");
+        var showTextDate = document.getElementById("show-text-date");
         showTextDiv.innerHTML = `<h3 style="color: green;">Display All Data From ${DateStart_ALL} to ${DateEnd_ALL}</h3>`
+        showTextDate.innerHTML = `<h5>Get CSV file from ${DateStart_ALL} to ${DateEnd_ALL}</h5>`
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -772,9 +776,6 @@
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    var showTextDate = document.getElementById("show-text-date");
-    showTextDate.innerHTML = `<h5>Get CSV file</h5>`
 
     let DataForDownload =new Array(14)
     var DateStartXLSX
