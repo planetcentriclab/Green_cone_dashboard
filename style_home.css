@@ -43,6 +43,19 @@ body {
     color: white;
 }
 
+.top-left-Describe {
+    position: absolute;
+    top: 280px; /* Adjust as needed */
+    left: 65px; /* Adjust as needed */
+    width: 200px; /* Adjust size as needed */
+    height: auto; /* Maintain aspect ratio */
+    max-width: 500px;
+    margin: 10.5px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+    background-color: #fff;
+}
+
 /* Data monitoring */   
 
 .last-element-container {
