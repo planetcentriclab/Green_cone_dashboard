@@ -399,7 +399,7 @@
                 all_date = []
             }
         }
-        console.log("In Loop",DateStart_ALL, DateEnd_ALL, indices)
+        // console.log("In Loop",DateStart_ALL, DateEnd_ALL, indices)
         window.dispatchEvent(lastElementUpdatedEvent);
     };
 
@@ -865,7 +865,7 @@
         };
 
         for(let i = 0; i < DataForDownload.length; i++){ 
-            console.log(i)
+            // console.log(i)
             if (i < 3){
                 XLSX.utils.book_append_sheet(wb, jsonToSheet(DataForDownload[i], columnMap1), sensor_names[i])
             }
